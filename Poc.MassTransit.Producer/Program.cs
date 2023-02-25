@@ -1,35 +1,40 @@
-using Azure.Storage.Blobs;
 using MassTransit;
-using MassTransit.MongoDbIntegration.MessageData;
+using Poc.MassTransit.Common.Config;
 using Poc.MassTransit.Producer;
 
-string blobConnection = "";
-string containerName = "";
-string serviceBusConnection = "";
-
-//Claim check com MongoDb
-string mongoConnection = "mongodb://root:x7j0mH8M%28cBo@127.0.0.1:27017/claim-check?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false";
-string mongoDatabase = "claim-check";
-
 IHost host = Host.CreateDefaultBuilder(args)
-    .ConfigureServices(services =>
+    .ConfigureServices((context, services) =>
     {
-        var messageDataRepository = new BlobServiceClient(blobConnection)
-                .CreateMessageDataRepository(containerName);
+        var config = context.Configuration.Get<AppConfig>();
 
-        //Claim check com MongoDb
-        //var messageDataRepository = new MongoDbMessageDataRepository(mongoConnection, mongoDatabase);
-
-        services.AddHostedService<Worker>();
+        //services.AddHostedService<ClaimCheckProducer>();
+        services.AddHostedService<QueueOneProducer>();
+        services.AddHostedService<QueueTwoProducer>();
+        services.AddHostedService<QueueThreeProducer>();
 
         services.AddMassTransit(x =>
         {
-            x.UsingAzureServiceBus((context, cfg) =>
+            if (config.PocKind!.BusType.Equals("ServiceBus"))
             {
-                cfg.Host(serviceBusConnection);
-                cfg.ConfigureEndpoints(context);
-                cfg.UseMessageData(messageDataRepository);
-            });
+                x.UsingAzureServiceBus((context, cfg) =>
+                {
+                    cfg.Host(config.Bus!.ConnectionString);
+                    cfg.ConfigureEndpoints(context);
+                    cfg.UseMessageData(MessageDataRepositoryFactory.GetRepository(config));
+                    // MessageDataDefaults.Threshold = 23000;
+                    //MessageDataDefaults.AlwaysWriteToRepository = false;
+                    MessageDataDefaults.TimeToLive = TimeSpan.FromDays(30);
+                });
+            }
+            else
+            {
+                x.UsingRabbitMq((context, cfg) =>
+               {
+                   cfg.Host(config.Bus!.ConnectionString);
+                   cfg.ConfigureEndpoints(context);
+                   cfg.UseMessageData(MessageDataRepositoryFactory.GetRepository(config));
+               });
+            }
         });
 
         services.AddSingleton<ISendEndpointProvider>(p => p.GetRequiredService<IBusControl>());
@@ -37,5 +42,3 @@ IHost host = Host.CreateDefaultBuilder(args)
     .Build();
 
 await host.RunAsync();
-
-

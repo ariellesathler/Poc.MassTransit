@@ -1,0 +1,23 @@
+version: '3'
+
+services: 
+  poc-rabbitmq:
+    image: rabbitmq:3.8.14-management-alpine
+    container_name: pocs-rabbitmq
+    restart: unless-stopped
+    ports:
+      - 5674:5672
+      - 15674:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+  poc-mongodb:
+    image: mongo:4.4.4
+    container_name: pocs-mongodb
+    restart: unless-stopped
+    ports:
+      - '27019:27017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: pocs

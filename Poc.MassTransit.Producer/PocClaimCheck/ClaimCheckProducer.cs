@@ -4,12 +4,12 @@ using Poc.MassTransit.Common;
 
 namespace Poc.MassTransit.Producer
 {
-    public class Worker : BackgroundService
+    public class ClaimCheckProducer : BackgroundService
     {
-        private readonly ILogger<Worker> logger;
+        private readonly ILogger<ClaimCheckProducer> logger;
         private readonly ISendEndpointProvider sendEndpointProvider;
 
-        public Worker(ILogger<Worker> logger, ISendEndpointProvider sendEndpointProvider)
+        public ClaimCheckProducer(ILogger<ClaimCheckProducer> logger, ISendEndpointProvider sendEndpointProvider)
         {
             this.logger = logger;
             this.sendEndpointProvider = sendEndpointProvider;
@@ -31,7 +31,7 @@ namespace Poc.MassTransit.Producer
                         Id = id,
                         Name = $"Arielle {i}"
                     })
-                }, stoppingToken); ;
+                }, stoppingToken); 
                 i++;
             }
         }
