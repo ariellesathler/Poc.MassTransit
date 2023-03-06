@@ -1,18 +1,12 @@
-﻿using Azure.Storage.Blobs;
+﻿using Amazon.S3;
 using MassTransit;
-using MassTransit.MongoDbIntegration.MessageData;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Poc.MassTransit.AzureFunctions;
 using Poc.MassTransit.AzureFunctions.Consumers;
-using Poc.MassTransit.Common;
 using Poc.MassTransit.Common.Config;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 [assembly: FunctionsStartup(typeof(Startup))]
 namespace Poc.MassTransit.AzureFunctions
@@ -34,9 +28,9 @@ namespace Poc.MassTransit.AzureFunctions
                 {
                     cfg.ConfigureEndpoints(context);
                     cfg.UseMessageData(MessageDataRepositoryFactory.GetRepository(config));
-                    MessageDataDefaults.Threshold = 23000;
-                    MessageDataDefaults.AlwaysWriteToRepository = false;
-                    MessageDataDefaults.TimeToLive = TimeSpan.FromDays(30);
+                    //MessageDataDefaults.Threshold = 23000;
+                    //MessageDataDefaults.AlwaysWriteToRepository = false;
+                    //MessageDataDefaults.TimeToLive = TimeSpan.FromDays(30);
 
                 });
         }

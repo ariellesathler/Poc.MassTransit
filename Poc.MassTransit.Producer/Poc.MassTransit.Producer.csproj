@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.4" />
     <PackageReference Include="MassTransit.Azure.ServiceBus.Core" Version="8.0.13" />
     <PackageReference Include="MassTransit.Azure.Storage" Version="8.0.13" />
     <PackageReference Include="MassTransit.MongoDb" Version="8.0.13" />

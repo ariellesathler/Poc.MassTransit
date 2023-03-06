@@ -18,6 +18,8 @@ namespace Poc.MassTransit.Producer
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             int i = 1;
+            var data = File.ReadAllText(@"C:\temp\PayloadCreateQuoteUnicoMoreThan100Risks (1).json");
+
             while (!stoppingToken.IsCancellationRequested && i <= 10)
             {
                 var id = Guid.NewGuid();
@@ -29,7 +31,8 @@ namespace Poc.MassTransit.Producer
                     Content = new PutMessageData<ContentMessage>(new ContentMessage
                     {
                         Id = id,
-                        Name = $"Arielle {i}"
+                        Name = $"Arielle {i}",
+                        Data = data
                     })
                 }, stoppingToken); 
                 i++;

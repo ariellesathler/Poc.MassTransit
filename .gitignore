@@ -349,6 +349,7 @@ ASALocalRun/
 
 # Local History for Visual Studio
 .localhistory/
+*.Local.json
 
 # BeatPulse healthcheck temp database
 healthchecksdb
