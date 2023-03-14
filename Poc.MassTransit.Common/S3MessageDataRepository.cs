@@ -5,7 +5,7 @@ using MassTransit;
 
 namespace Poc.MassTransit.Common
 {
-    public class S3MessageDataRepository : IMessageDataRepository, IBusObserver
+    public class S3MessageDataRepository : IMessageDataRepository
     {
         private readonly IAmazonS3 amazonS3Client;
         private readonly string bucketName;
@@ -14,53 +14,7 @@ namespace Poc.MassTransit.Common
         {
             this.amazonS3Client = amazonS3Client;
             this.bucketName = bucketName;
-        }
-
-        public void CreateFaulted(Exception exception)
-        {
-        }
-
-        public void PostCreate(IBus bus)
-        {
-        }
-
-        public async Task PreStart(IBus bus)
-        {
-            try
-            {
-                await amazonS3Client.EnsureBucketExistsAsync(bucketName);
-            }
-            catch (Exception e)
-            {
-                LogContext.Error?.Log(e, $"Amazon S3 error at bucket '{bucketName}' creation/validation.");
-                throw;
-            }
-        }
-
-        public Task StartFaulted(IBus bus, Exception exception)
-        {
-            return Task.CompletedTask;
-        }
-
-        public Task PostStart(IBus bus, Task<BusReady> busReady)
-        {
-            return Task.CompletedTask;
-        }
-
-        public Task PreStop(IBus bus)
-        {
-            return Task.CompletedTask;
-        }
-
-        public Task StopFaulted(IBus bus, Exception exception)
-        {
-            return Task.CompletedTask;
-        }
-
-        public Task PostStop(IBus bus)
-        {
-            return Task.CompletedTask;
-        }
+        }              
 
 
         public async Task<Stream> Get(Uri address, CancellationToken cancellationToken = default)
@@ -90,6 +44,8 @@ namespace Poc.MassTransit.Common
         {
             try
             {
+                await amazonS3Client.EnsureBucketExistsAsync(bucketName);
+
                 var fileKey = $"{Guid.NewGuid()}.txt";
                 var response = await amazonS3Client.PutObjectAsync(new PutObjectRequest
                 {
