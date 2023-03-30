@@ -14,7 +14,6 @@ namespace Poc.MassTransit.AzureFunctions.Consumers
         {
             var message = await context.Message.Content.Value;
 
-            //throw new NotImplementedException();
         }
     }
 }

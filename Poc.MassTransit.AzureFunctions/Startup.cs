@@ -1,4 +1,6 @@
-﻿using Amazon.S3;
+﻿using Amazon.Extensions.NETCore.Setup;
+using Amazon.Runtime;
+using Amazon.S3;
 using MassTransit;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
@@ -28,9 +30,8 @@ namespace Poc.MassTransit.AzureFunctions
                 {
                     cfg.ConfigureEndpoints(context);
                     cfg.UseMessageData(MessageDataRepositoryFactory.GetRepository(config));
-                    //MessageDataDefaults.Threshold = 23000;
-                    //MessageDataDefaults.AlwaysWriteToRepository = false;
-                    //MessageDataDefaults.TimeToLive = TimeSpan.FromDays(30);
+                    MessageDataDefaults.Threshold = 230000;
+                    MessageDataDefaults.AlwaysWriteToRepository = false;
 
                 });
         }

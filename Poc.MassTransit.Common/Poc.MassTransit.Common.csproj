@@ -7,9 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.S3" Version="3.7.103.20" />
-    <PackageReference Include="MassTransit.Azure.Storage" Version="8.0.13" />
-    <PackageReference Include="MassTransit.MongoDb" Version="8.0.13" />
+    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.4" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.103.22" />
+    <PackageReference Include="MassTransit.AmazonS3" Version="8.0.14" />
+    <PackageReference Include="MassTransit.Azure.Storage" Version="8.0.14" />
+    <PackageReference Include="MassTransit.MongoDb" Version="8.0.14" />
   </ItemGroup>
 
 </Project>

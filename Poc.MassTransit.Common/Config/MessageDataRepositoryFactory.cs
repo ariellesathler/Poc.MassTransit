@@ -1,7 +1,10 @@
 ﻿using Amazon;
+using Amazon.Extensions.NETCore.Setup;
+using Amazon.Runtime;
 using Amazon.S3;
 using Azure.Storage.Blobs;
 using MassTransit;
+using MassTransit.AmazonS3.MessageData;
 using MassTransit.MongoDbIntegration.MessageData;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,7 +18,7 @@ namespace Poc.MassTransit.Common.Config
             {
                 "MongoDB" => new MongoDbMessageDataRepository(config.Mongo!.ConnectionString, config.Mongo.DatabaseName),
                 "BlobStorage" => new BlobServiceClient(config.BlobStorage!.ConnectionString).CreateMessageDataRepository(config.BlobStorage!.ContainerName),
-                "S3" => new S3MessageDataRepository(provider.GetRequiredService<IAmazonS3>(), config.AWS!.BucketName),
+                "S3" => new AmazonS3MessageDataRepository(provider.GetRequiredService<IAmazonS3>(), config.AWS!.BucketName),
                 _ => throw new NotSupportedException($"Poc kind not supported! - {config.PocKind!.MessageDataRepositoryType}"),
             };
 
@@ -38,11 +41,9 @@ namespace Poc.MassTransit.Common.Config
                 ServiceURL = config.AWS!.ServiceURL
             };
 
-            var awsCredentials = new AwsCredentialsKeys(config);
+            var amazonClient = new AmazonS3Client(config.AWS!.AccessKeyId, config.AWS.SecretAccessKey, s3Config);
 
-            var amazonClient = new AmazonS3Client(awsCredentials, s3Config);
-
-            return new S3MessageDataRepository(amazonClient, config.AWS!.BucketName);
+            return new AmazonS3MessageDataRepository(amazonClient, config.AWS!.BucketName);
         }
     }
 }
