@@ -10,10 +10,11 @@ IHost host = Host.CreateDefaultBuilder(args)
     {
         var config = context.Configuration.Get<AppConfig>();
 
-        services.AddHostedService<ClaimCheckProducer>();
+        //services.AddHostedService<ClaimCheckProducer>();
         //services.AddHostedService<QueueOneProducer>();
         //services.AddHostedService<QueueTwoProducer>();
         //services.AddHostedService<QueueThreeProducer>();
+        services.AddHostedService<BatchMessageProducer>();
 
         var options = new AWSOptions
         {

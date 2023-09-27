@@ -3,7 +3,7 @@ version: '3'
 services: 
   poc-rabbitmq:
     image: rabbitmq:3.8.14-management-alpine
-    container_name: pocs-rabbitmq
+    container_name: my-rabbitmq
     restart: unless-stopped
     ports:
       - 5674:5672
@@ -13,7 +13,7 @@ services:
       RABBITMQ_DEFAULT_PASS: admin
   poc-mongodb:
     image: mongo:4.4.4
-    container_name: pocs-mongodb
+    container_name: my-mongodb
     restart: unless-stopped
     ports:
       - '27019:27017'
@@ -23,12 +23,12 @@ services:
       MONGO_INITDB_DATABASE: pocs
   localstack:
     image: localstack/localstack
-    container_name: pocs-aws
+    container_name: my-aws
     environment:
       - SERVICES=s3
       - DOCKER_HOST=unix:///var/run/docker.sock
-      - AWS_ACCESS_KEY_ID=test
-      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_ACCESS_KEY_ID=admin
+      - AWS_SECRET_ACCESS_KEY=admin
       - AWS_DEFAULT_REGION=us-east-1
     ports:
       - "4566:4566" # s3
